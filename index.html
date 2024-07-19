@@ -37,13 +37,15 @@
       const jsonData = JSON.parse(innerBox.textContent); 
       const token = jsonData.token; // Assuming the token is a property named 'token'
 
+      // Construct the verification API URL dynamically
+      const apiUrl = `https://eoq6mbh3ivtmzet.m.pipedream.net/${token}`;
+
       // Construct the verification request headers
       const headers = {
-        'Content-Type': 'application/json',
-        'X-User-Token': token // Set the custom header with the user-provided token
+        'Content-Type': 'application/json'
       };
 
-      fetch('https://eoq6mbh3ivtmzet.m.pipedream.net/', {
+      fetch(apiUrl, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({ code: userCode, token: token })
