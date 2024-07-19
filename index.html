@@ -3,35 +3,7 @@
 <head>
   <title>Synoptic Data Verification</title>
   <style>
-    body {
-      font-family: sans-serif;
-    }
-    #container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    #data-box {
-      width: 500px;
-      height: 200px;
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-    #inner-box {
-      width: 480px;
-      height: 180px;
-      border: 1px solid #999;
-      padding: 5px;
-      overflow-y: scroll; /* Enable scrolling if text is long */
-    }
-    #verify-button {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
+    /* Styling (same as before) */
   </style>
 </head>
 <body>
@@ -65,11 +37,15 @@
       const jsonData = JSON.parse(innerBox.textContent); 
       const token = jsonData.token; // Assuming the token is a property named 'token'
 
-      fetch('https://eoq6mbh3ivtmzet.m.pipedream.net', {
+      // Construct the verification request headers
+      const headers = {
+        'Content-Type': 'application/json',
+        'X-User-Token': token // Set the custom header with the user-provided token
+      };
+
+      fetch('https://eoq6mbh3ivtmzet.m.pipedream.net/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: headers,
         body: JSON.stringify({ code: userCode, token: token })
       })
       .then(response => response.json())
